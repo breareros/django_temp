@@ -1,0 +1,45 @@
+{% extends 'apostil/base.html' %}
+{% block content %}
+
+<div class="content">
+
+<div id="table2">
+        <table class="table caption-top table-striped table-bordered table-sm">
+        <caption><h2>Слоты времени {{ date|date:"d.m.Y" }}</h2></caption>
+        <thead>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Записан</th>
+                <th>Документы</th>
+                <th>Не явился</th>
+        </thead>
+
+        <tbody>
+                {% for chunk in all_chunks %}
+                    <tr>
+                            <td>{{ chunk.date|date:"d.m.Y" }}</td>
+                            <td>{{ chunk.time }}</td>
+                            <td> {% if chunk.apostils.fio %}
+                                    <div>{{ chunk.apostils.fio }}</div>
+                                {% else %}
+                                    <a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a>
+                                {% endif %}
+                            </td>
+                            <td>{{ chunk.apostils.is_done }}</td>
+                            <td>{{ chunk.apostils.is_gone }}</td>
+                    </tr>
+                    {% if date ==  chunk.date %}
+                        <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+    <hr>
+</div>
+{% endblock %}

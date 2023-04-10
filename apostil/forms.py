@@ -10,6 +10,15 @@ from .models import ApostilList, Chunk
 class AddApostilForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['chunk'] = forms.ModelChoiceField(
+            queryset=Chunk.objects.filter(
+                Q(pk=self.instance.chunk_id) |
+                Q(date__gte=datetime.today()) &  #  нельзя записаться в прошлое
+                Q(apostils__isnull=True)
+            ),
+            label='Слот времени',
+            empty_label='Дата не выбрана',
+            widget=forms.Select(attrs={'class': 'form-select'}))
         self.fields['chunk'].empty_label = "Дата не выбрана"
 
     class Meta:
@@ -26,7 +35,7 @@ class AddApostilForm(forms.ModelForm):
         }
 
 
-class AddApostiWithDateForm(forms.ModelForm):
+class AddApostilWithDateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -68,7 +77,6 @@ class EditApostilForm(forms.ModelForm):
             'comments': forms.Textarea(attrs={'class': 'form-control'}),
             'is_gone': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_done': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            # 'chunk': forms.Select(attrs={'class': 'form-select'}),
         }
 
 

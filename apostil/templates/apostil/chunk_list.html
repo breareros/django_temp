@@ -30,9 +30,9 @@
                             <td>{{ chunk.date|date:"d.m.Y" }}</td>
                             <td>{{ chunk.time }}</td>
                             {% if chunk.apostils %}
-                                <td><a href="{% url 'edit_apostil' pk=chunk.apostils.pk %}" class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
+                                <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}" class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
                             {% else %}
-                                <td><a href="{% url 'add_apostil' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a></td>
+                                <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a></td>
                             {% endif %}
                             <td class="text-center">{% if chunk.apostils.phone %}{{ chunk.apostils.phone }} {% endif %}</td>
                             <td class="text-center">
@@ -76,9 +76,9 @@
                             <td>{{ chunk.date|date:"d.m.Y" }}</td>
                             <td>{{ chunk.time }}</td>
                             {% if chunk.apostils %}
-                                <td><a href="{% url 'edit_apostil' pk=chunk.apostils.pk %}" class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
+                                <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}" class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
                             {% else %}
-                                <td><a href="{% url 'add_apostil' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a></td>
+                                <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a></td>
                             {% endif %}
                             <td class="text-center">{% if chunk.apostils.phone %}{{ chunk.apostils.phone }} {% endif %}</td>
                             <td class="text-center">
@@ -116,9 +116,9 @@
                         <td>{{ chunk.date|date:"d.m.Y" }}</td>
                         <td>{{ chunk.time }}</td>
                         {% if chunk.apostils %}
-                            <td><a href="{% url 'edit_apostil' pk=chunk.apostils.pk %}" class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
+                            <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}" class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
                         {% else %}
-                            <td><a href="{% url 'add_apostil' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a></td>
+                            <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a></td>
                         {% endif %}
                     </tr>
 
