@@ -1,0 +1,9 @@
+{% extends 'apostil/base.html' %}
+{% block content %}
+<form action="" method="post" class="form-row">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Добавить</button>
+    <a href="{% url 'chunk_list' %}" class="btn btn-danger">Отмена</a>
+</form>
+{%  endblock %}

@@ -1,0 +1,135 @@
+{% extends 'apostil/base.html' %}
+{% block content %}
+
+<div class="content">
+{#    <h1>Журнал предварительной записи на апостиль</h1>#}
+    <div class="btn btn-outline-primary btn-lg mb-4">
+        <a href="{% url 'add_apostil' %}"><h1>Добавить</h1></a>
+    </div>
+
+    <div class="old_apostils">
+        <table>
+        <caption><h2>Ранее ({{ old_apostils|length }}) </h2></caption>
+            <thead>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>ФИО</th>
+                <th>Документов</th>
+                <th>Телефон</th>
+                <th>Примечание</th>
+                <th>Закончено</th>
+            </thead>
+            <tbody>
+            {% for apostil in old_apostils %}
+                <tr>
+{#                    <td>{{ future.pk }}</td>#}
+                    <td>{{ apostil.date|date:"d.m.Y" }}</td>
+                    <td>{{ apostil.time }}</td>
+                    <td><a href="{% url 'edit_apostil' pk=apostil.id %}">{{ apostil.fio }}</a></td>
+                    <td>{{ apostil.count_docs }}</td>
+                    <td>{{ apostil.phone }}</td>
+                    <td>{{ apostil.comments }}</td>
+                    <td>{{ apostil.is_done }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="today_apostils">
+        <table>
+        <caption><h2>На сегодня ({{ today_apostils|length }}) </h2></caption>
+            <thead>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>ФИО</th>
+                <th>Документов</th>
+                <th>Телефон</th>
+                <th>Примечание</th>
+                <th>Закончено</th>
+            </thead>
+            <tbody>
+            {% for apostil in today_apostils %}
+                <tr>
+{#                    <td>{{ future.pk }}</td>#}
+                    <td>{{ apostil.date|date:"d.m.Y" }}</td>
+                    <td>{{ apostil.time }}</td>
+                    <td><a href="{% url 'edit_apostil' pk=apostil.id %}">{{ apostil.fio }}</a></td>
+                    <td>{{ apostil.count_docs }}</td>
+                    <td>{{ apostil.phone }}</td>
+                    <td>{{ apostil.comments }}</td>
+                    <td>{{ apostil.is_done }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <div class="future_apostils">
+        <table>
+        <caption><h2>Предстоящие апостили ({{ future_apostils|length }}) </h2></caption>
+        <thead>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>ФИО</th>
+                <th>Документов</th>
+                <th>Телефон</th>
+                <th>Примечание</th>
+                <th>Закончено</th>
+        </thead>
+        <tbody>
+        {% for apostil in future_apostils %}
+            <tr>
+    {#            <td>{{ apostil.pk }}</td>#}
+                <td>{{ apostil.date|date:"d.m.Y" }}</td>
+                <td>{{ apostil.time }}</td>
+{#                <td>{{ apostil.fio }}</td>#}
+                <td><a href="{% url 'edit_apostil' pk=apostil.id %}">{{ apostil.fio }}</a></td>
+                <td>{{ apostil.count_docs }}</td>
+                <td>{{ apostil.phone }}</td>
+                <td>{{ apostil.comments }}</td>
+                <td>{{ apostil.is_done }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+
+    <br>
+
+    <div class="all_apostils">
+        <table>
+        <caption><h2>Все-все апостили ({{ all_apostil|length }}) </h2></caption>
+        <thead>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>ФИО</th>
+                <th>Документов</th>
+                <th>Телефон</th>
+                <th>Примечание</th>
+                <th>Закончено</th>
+        </thead>
+        <tbody>
+        {% for apostil in all_apostil %}
+            <tr>
+    {#            <td>{{ apostil.pk }}</td>#}
+                <td>{{ apostil.date|date:"d.m.Y" }}</td>
+                <td>{{ apostil.time }}</td>
+{#                <td>{{ apostil.fio }}</td>#}
+                <td><a href="{% url 'edit_apostil' pk=apostil.id %}">{{ apostil.fio }}</a></td>
+                <td>{{ apostil.count_docs }}</td>
+                <td>{{ apostil.phone }}</td>
+                <td>{{ apostil.comments }}</td>
+                <td>{{ apostil.is_done }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

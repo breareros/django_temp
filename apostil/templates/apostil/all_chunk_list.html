@@ -1,0 +1,81 @@
+{% extends 'apostil/base.html' %}
+{% block content %}
+
+<div class="content">
+{#    <div class="">#}
+{#        <table class="table caption-top table-striped table-bordered table-sm">#}
+{#            <caption><h2>Слоты времени</h2></caption>#}
+{#            <thead>#}
+{#                    <th>Дата</th>#}
+{#                    <th>Время</th>#}
+{#                    <th>Записан</th>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#            {% for chunk in all_chunks %}#}
+{#                    <tr>#}
+{#                        <td>{{ chunk.date|date:"d.m.Y" }}</td>#}
+{#                        <td>{{ chunk.time }}</td>#}
+{#                        {% if chunk.chunks %}#}
+{#                            <td><a href="{% url 'edit_apostil' pk=chunk.chunks.pk %}" class="btn btn-warning">{{ chunk.chunks.fio }}</a></td>#}
+{#                        {% else %}#}
+{#                            <td><a href="{% url 'add_apostil' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a></td>#}
+{#                        {% endif %}#}
+{#                    </tr>#}
+{##}
+{#            {% endfor %}#}
+{#            </tbody>#}
+{#        </table>#}
+{#    <div><a href="{% url 'chunk_generate' %}" class="btn btn btn-outline-info mb-5">Добавить слоты времени</a></div>#}
+{#    </div>#}
+
+    <hr>
+
+<div id="table2">
+{#{% for date in list_dates %}#}
+        <table class="table caption-top table-striped table-bordered table-sm">
+        <caption><h2>Слоты времени {{ date|date:"d.m.Y" }}</h2></caption>
+        <thead>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Записан</th>
+                <th>Документы</th>
+                <th>Не явился</th>
+        </thead>
+
+        <tbody>
+{#                <div id="id_{{ date|date:"Y.m.d" }}">{{ date|date:"Y.m.d" }}</div>#}
+                {% for chunk in all_chunks %}
+{#                {% if date ==  chunk.date %}#}
+                    <tr>
+                            <td>{{ chunk.date|date:"d.m.Y" }}</td>
+                            <td>{{ chunk.time }}</td>
+{#                            <td><a href="{% url 'edit_apostil' pk=chunk.chunks.pk %}" class="btn btn-warning">{{ chunk.chunks.fio }}</a></td>#}
+                            <td> {% if chunk.chunks__fio %}
+{#                                    <div class="btn btn-warning">{{ chunk.chunks__fio }}</div>#}
+                                    <a href="{% url 'edit_apostil' pk=chunk.chunks__id %}" class="btn btn-warning">{{ chunk.chunks__fio }} -
+                                        {{ chunk.chunks__id }}</a>
+                                {% else %}
+{#                                    <div class="btn btn-warning">{{ chunk.chunks__fio }}</div>#}
+                                    <a href="{% url 'add_apostil' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a>
+                                {% endif %}
+                            </td>
+                            <td>{{ chunk.chunks__is_done }}</td>
+                            <td>{{ chunk.chunks__is_gone }}</td>
+                    </tr>
+                    {% if date ==  chunk.date %}
+                        <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+        </tbody>
+    </table>
+{#{% endfor %}#}
+</div>
+{#    <div>{{ all_chunks }}</div>#}
+    <hr>
+</div>
+{% endblock %}

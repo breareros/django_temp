@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Список чанков</h1>
+  <ul id="chunk-list">
+    {% for chunk in all_chunks %}
+      <li>
+        <a href="{% url 'chunk-detail' chunk.id %}">{{ chunk.name }}</a>
+        <p>{{ chunk.description }}</p>
+        <p>{{ chunk.date }}</p>
+      </li>
+    {% empty %}
+      <p>Нет чанков для отображения</p>
+    {% endfor %}
+  </ul>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    function loadChunks() {
+      $.ajax({
+        url: "{% url 'chunk-list' %}",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          var chunkList = $("#chunk-list");
+          chunkList.empty();
+          if (data.length > 0) {
+            for (var i = 0; i < data.length; i++) {
+              var chunk = data[i];
+              var chunkHTML = '<li>' +
+                '<a href="/chunk/' + chunk.id + '">' + chunk.name + '</a>' +
+                '<p>' + chunk.description + '</p>' +
+                '<p>' + chunk.date + '</p>' +
+                '</li>';
+              chunkList.append(chunkHTML);
+            }
+          } else {
+            chunkList.append('<p>Нет чанков для отображения</p>');
+          }
+        }
+      });
+    }
+    $(document).ready(function() {
+      loadChunks();
+    });
+  </script>
+{% endblock %}
