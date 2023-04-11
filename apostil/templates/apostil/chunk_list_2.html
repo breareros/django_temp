@@ -1,0 +1,197 @@
+{% extends 'apostil/base.html' %}
+{% load static %}
+{% block head %}
+    <meta http-equiv="refresh" content="60">
+{% endblock %}
+
+{% block content %}
+
+    <div class="content">
+    <div class="">
+        <div id="searchbar">
+            <input id="search" onkeyup="searchTable()" type="text" class="form-control mb-2" placeholder="поиск..."/>
+        </div>
+
+        {% if lost %}
+            <div class="lost">
+                <table id="TodayChanksTable"
+                       class="table caption-top table-striped table-bordered table-sm table-hover">
+                    <caption><h2>Потеряшки</h2></caption>
+                    <thead>
+                    <th>Дата</th>
+                    <th>Время</th>
+                    <th>Записан</th>
+                    <th class="text-center">Телефон</th>
+                    <th class="text-center">Документы</th>
+                    <th class="text-center">Не явились</th>
+                    </thead>
+                    <tbody>
+                    {% for chunk in lost %}
+                        <tr>
+                            <td>{{ chunk.date|date:"d.m.Y" }}</td>
+                            <td>{{ chunk.time }}</td>
+                            {% if chunk.apostils %}
+                                <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}"
+                                       class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
+                            {% else %}
+                                <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a>
+                                </td>
+                            {% endif %}
+                            <td class="text-center">
+                                {% if chunk.apostils.phone %}{{ chunk.apostils.phone }} {% endif %}</td>
+                            <td class="text-center">
+                                {#                                {% if chunk.apostils.is_done %} <i class="bi bi-check2-circle"></i> {% else %} <i class="bi bi-sign-stop"></i> {% endif %}#}
+                                {% if chunk.apostils.is_done %}
+                                    <span class="badge rounded-pill text-bg-success"><i class="bi bi-check2-circle"></i></span>
+                                {% else %}
+                                    <span class="badge rounded-pill text-bg-warning bi-lg">Нет</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if chunk.apostils.is_gone %}
+                                    <span class="badge rounded-pill text-bg-success"><i
+                                            class="bi bi-check2-circle bi-lg"></i></span>
+                                    {#                                {% else %}#}
+                                    {#                                    <span class="badge rounded-pill text-bg-warning bi-lg">Нет</span>#}
+                                {% endif %}
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
+
+        <div class="today">
+            <table id="TodayChanksTable" class="table caption-top table-striped table-bordered table-sm table-hover">
+                <caption><h2>На сегодня</h2></caption>
+                <thead>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Записан</th>
+                <th class="text-center">Телефон</th>
+                <th class="text-center">Документы ({{ days_count.docs }} шт.)</th>
+                <th class="text-center">Не явились</th>
+                </thead>
+                <tbody>
+                {% for chunk in today %}
+                    <tr>
+                        <td>{{ chunk.date|date:"d.m.Y" }}</td>
+                        <td>{{ chunk.time }}</td>
+                        {% if chunk.apostils %}
+                            <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}"
+                                   class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
+                        {% else %}
+                            <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a>
+                            </td>
+                        {% endif %}
+                        <td class="text-center">{% if chunk.apostils.phone %}{{ chunk.apostils.phone }} {% endif %}</td>
+
+                        <td class="text-center">
+                            {#                                {% if chunk.apostils.is_done %} <i class="bi bi-check2-circle"></i> {% else %} <i class="bi bi-sign-stop"></i> {% endif %}#}
+                            {% if chunk.apostils.is_done %}
+                                <span class="badge rounded-pill text-bg-success fs-6">{{ chunk.apostils.count_docs }} - <i
+                                        class="bi bi-check2-circle"></i></span>
+                            {% else %}
+                                {% if chunk.apostils.fio %}
+                                    {{ chunk.apostils.count_docs }}
+                                    <span class="badge rounded-pill text-bg-warning bi-lg">Нет</span>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if chunk.apostils.is_gone %}
+                                <span class="badge rounded-pill text-bg-danger fs-5"><i
+                                        class="bi bi-check2-circle bi-lg"></i></span>
+                                {#                                {% else %}#}
+                                {#                                    <span class="badge rounded-pill text-bg-warning bi-lg">Нет</span>#}
+                            {% endif %}
+                        </td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="testdiv">
+            {% for day, info in per_days.items %}
+                <table id="ChanksTable" class="table caption-top table-striped table-bordered table-sm table-hover">
+                {#            <caption><h2>Слоты времени на {{ day.date|date:"d.m.Y" }}</h2></caption>#}
+                <caption><h2>Слоты времени на {{ day }}</h2></caption>
+                <thead>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Записан</th>
+                <th class="text-center">Телефон</th>
+                {#                <th class="text-center">Документы ({{ days_count.docs }} шт.)</th>#}
+                <th class="text-center">Документы {{ info.count_docs.docs }}</th>
+                </thead>
+
+                <tbody>
+                {% for chunk in info.chunks %}
+                    <tr>
+                        <td>{{ chunk.date|date:"d.m.Y" }}</td>
+                        <td>{{ chunk.time }}</td>
+                        {% if chunk.apostils %}
+                            <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}"
+                                   class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
+                        {% else %}
+                            <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a>
+                            </td>
+                        {% endif %}
+
+                        <td class="text-center">{% if chunk.apostils.phone %}{{ chunk.apostils.phone }} {% endif %}</td>
+
+                        {#ДОКУМЕНТЫ#}
+                        <td class="text-center">
+                            {% if chunk.apostils.is_done %}
+                                <span class="badge rounded-pill text-bg-success fs-6">{{ chunk.apostils.count_docs }} - <i
+                                        class="bi bi-check2-circle"></i></span>
+                            {% else %}
+                                {% if chunk.apostils.fio %}
+                                    <span class="badge rounded-pill text-bg-warning bi-lg fs-6"> {{ chunk.apostils.count_docs }} - <i
+                                            class="bi bi-x-lg"></i></span>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        {#        <table id="ChanksTable" class="table caption-top table-striped table-bordered table-sm table-hover">#}
+        {#            <caption><h2>Слоты времени</h2></caption>#}
+        {#            <thead>#}
+        {#                    <th>Дата</th>#}
+        {#                    <th>Время</th>#}
+        {#                    <th>Записан</th>#}
+        {#            </thead>#}
+        {#            <tbody>#}
+        {#            {% for chunk in all_chunks %}#}
+        {#                    <tr>#}
+        {#                        <td>{{ chunk.date|date:"d.m.Y" }}</td>#}
+        {#                        <td>{{ chunk.time }}</td>#}
+        {#                        {% if chunk.apostils %}#}
+        {#                            <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}" class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>#}
+        {#                        {% else %}#}
+        {#                            <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a></td>#}
+        {#                        {% endif %}#}
+        {#                    </tr>#}
+        {##}
+        {#            {% endfor %}#}
+        {#            </tbody>#}
+        {#        </table>#}
+        {#    <div><a href="{% url 'chunk_generate' %}" class="btn btn btn-outline-info mb-5">Добавить слоты времени</a></div>#}
+        {#    </div>#}
+        {#    <div>{{ all_chunks }}</div>#}
+
+    </div>
+{% endblock %}
+{% block extra %}
+    <script src="{% static 'apostil/js/search_table.js' %}"></script>
+{% endblock %}

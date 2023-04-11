@@ -3,8 +3,8 @@ from .models import ApostilList, Chunk
 
 # Register your models here.
 class ApostilListAdmin(admin.ModelAdmin):
-    list_display = ('id', 'fio', 'count_docs', 'phone', 'comments', 'is_done', 'chunk')
-    list_display_links = ('fio', 'phone', 'is_done' )
+    list_display = ('id', 'fio', 'count_docs', 'phone', 'comments', 'is_done', 'chunk', 'executor_name')
+    list_display_links = ('fio', 'phone', 'is_done', 'executor_name' )
     search_fields = ('fio', 'phone', 'comments')
 
 class ChunkAdmin(admin.ModelAdmin):

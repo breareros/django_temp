@@ -66,6 +66,7 @@ class EditApostilForm(forms.ModelForm):
             empty_label='Дата не выбрана',
             widget=forms.Select(attrs={'class': 'form-select'}))
         self.fields['chunk'].empty_label = "Дата не выбрана"
+        self.fields['executor_name'].empty_label = "Исполнитель не выбран"
 
     class Meta:
         model = ApostilList
@@ -77,6 +78,7 @@ class EditApostilForm(forms.ModelForm):
             'comments': forms.Textarea(attrs={'class': 'form-control'}),
             'is_gone': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_done': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'executor_name': forms.Select(choices=base.executors, attrs={'class': 'form-select'}),
         }
 
 

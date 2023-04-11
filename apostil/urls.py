@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import index, AddApostil, EditApostil, AllApostil, ListChunk, AddApostilWithDate, gen_chunks, \
-    ListAllChunk
+    ListAllChunk, report, ListChunk2
 
 urlpatterns = [
     path('apostil_list/', AllApostil.as_view(), name='apostil_list'),
@@ -10,8 +10,11 @@ urlpatterns = [
 
     # path('chunk_list/<str:date>/<str:time>/', ListChunk.as_view(), name='chunk_list'),
     path('chunk_list/', ListChunk.as_view(), name='chunk_list'),
+    path('cl2/', ListChunk2.as_view(), name='chunk_list_2'),
     path('all_chunk_list/', ListAllChunk.as_view(), name='chunk_list_all'), # НЕДОДЕЛКА
     path('chunk_generate/', gen_chunks, name='chunk_generate'),
+
+    path('report/', report, name='report'),
 
     path('', ListChunk.as_view(), name='index'),
 ]

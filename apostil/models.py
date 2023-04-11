@@ -15,6 +15,7 @@ class ApostilList(models.Model):
     comments = models.TextField(null=True, blank=True, verbose_name='Примечания')
     is_done = models.BooleanField(default=False, verbose_name="Документы предоставлены")
     is_gone = models.BooleanField(default=False, verbose_name="Не явились")
+    executor_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Исполнитель') # , choices=base.executors)
     chunk = models.OneToOneField('Chunk', on_delete=models.CASCADE, related_name='apostils', blank=True, null=True,
                                  verbose_name='Слот времени')
 
