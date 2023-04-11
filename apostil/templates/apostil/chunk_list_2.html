@@ -12,6 +12,8 @@
             <input id="search" onkeyup="searchTable()" type="text" class="form-control mb-2" placeholder="поиск..."/>
         </div>
 
+
+        {#ПОТЕРЯШКИ#}
         {% if lost %}
             <div class="lost">
                 <table id="TodayChanksTable"
@@ -63,7 +65,7 @@
             </div>
         {% endif %}
 
-
+        {#НА СЕГОДНЯ#}
         <div class="today">
             <table id="TodayChanksTable" class="table caption-top table-striped table-bordered table-sm table-hover">
                 <caption><h2>На сегодня</h2></caption>
@@ -72,7 +74,11 @@
                 <th>Время</th>
                 <th>Записан</th>
                 <th class="text-center">Телефон</th>
-                <th class="text-center">Документы ({{ days_count.docs }} шт.)</th>
+                <th class="text-center">Документы
+                    {% if days_count.docs %}
+                        ({{ days_count.docs }} шт.)
+                    {% endif %}
+                </th>
                 <th class="text-center">Не явились</th>
                 </thead>
                 <tbody>
@@ -80,6 +86,7 @@
                     <tr>
                         <td>{{ chunk.date|date:"d.m.Y" }}</td>
                         <td>{{ chunk.time }}</td>
+
                         {% if chunk.apostils %}
                             <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}"
                                    class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
@@ -87,26 +94,27 @@
                             <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a>
                             </td>
                         {% endif %}
+
                         <td class="text-center">{% if chunk.apostils.phone %}{{ chunk.apostils.phone }} {% endif %}</td>
 
+                        {#ДОКУМЕНТЫ#}
                         <td class="text-center">
-                            {#                                {% if chunk.apostils.is_done %} <i class="bi bi-check2-circle"></i> {% else %} <i class="bi bi-sign-stop"></i> {% endif %}#}
                             {% if chunk.apostils.is_done %}
                                 <span class="badge rounded-pill text-bg-success fs-6">{{ chunk.apostils.count_docs }} - <i
                                         class="bi bi-check2-circle"></i></span>
                             {% else %}
                                 {% if chunk.apostils.fio %}
-                                    {{ chunk.apostils.count_docs }}
-                                    <span class="badge rounded-pill text-bg-warning bi-lg">Нет</span>
+                                    <span class="badge rounded-pill text-bg-warning bi-lg fs-6"> {{ chunk.apostils.count_docs }} - <i
+                                            class="bi bi-x-lg"></i></span>
                                 {% endif %}
                             {% endif %}
                         </td>
+
+                        {#НЕ ЯВИЛИСЬ#}
                         <td class="text-center">
                             {% if chunk.apostils.is_gone %}
                                 <span class="badge rounded-pill text-bg-danger fs-5"><i
                                         class="bi bi-check2-circle bi-lg"></i></span>
-                                {#                                {% else %}#}
-                                {#                                    <span class="badge rounded-pill text-bg-warning bi-lg">Нет</span>#}
                             {% endif %}
                         </td>
 
@@ -128,7 +136,11 @@
                 <th>Записан</th>
                 <th class="text-center">Телефон</th>
                 {#                <th class="text-center">Документы ({{ days_count.docs }} шт.)</th>#}
-                <th class="text-center">Документы {{ info.count_docs.docs }}</th>
+                <th class="text-center">Документы
+                    {% if info.count_docs.docs %}
+                        ({{ info.count_docs.docs }} шт.)
+                    {% endif %}
+                </th>
                 </thead>
 
                 <tbody>

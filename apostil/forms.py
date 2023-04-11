@@ -13,7 +13,8 @@ class AddApostilForm(forms.ModelForm):
         self.fields['chunk'] = forms.ModelChoiceField(
             queryset=Chunk.objects.filter(
                 Q(pk=self.instance.chunk_id) |
-                Q(date__gte=datetime.today()) &  #  нельзя записаться в прошлое
+                # Q(date__gte=datetime.today()) &  #  нельзя записаться в прошлое
+                Q(date__range=(datetime.today(), datetime.today() + timedelta(days=base.limit_days))) &
                 Q(apostils__isnull=True)
             ),
             label='Слот времени',
@@ -44,7 +45,7 @@ class AddApostilWithDateForm(forms.ModelForm):
         fields = ['fio', 'phone', 'count_docs', 'comments', 'is_gone', 'is_done']
         widgets = {
             'fio': forms.TextInput(attrs={'class': 'form-control'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'type': 'tel', }),
             'count_docs': forms.NumberInput(attrs={'class': 'form-control'}),
             'comments': forms.Textarea(attrs={'class': 'form-control'}),
             'is_gone': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -54,12 +55,12 @@ class AddApostilWithDateForm(forms.ModelForm):
 
 class EditApostilForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        limit_days = base.limit_days
+        # limit_days = base.limit_days
         super().__init__(*args, **kwargs)
         self.fields['chunk'] = forms.ModelChoiceField(
             queryset=Chunk.objects.filter(
                 Q(pk=self.instance.chunk_id) |
-                Q(date__range=(datetime.today(), datetime.today() + timedelta(days=limit_days))) &
+                Q(date__range=(datetime.today(), datetime.today() + timedelta(days=base.limit_days))) &
                 Q(apostils__isnull=True)
             ),
             label='Слот времени',

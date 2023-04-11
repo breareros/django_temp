@@ -3,6 +3,7 @@ import datetime
 from datetime import date, timedelta, datetime
 
 from django.db.models import Count, Sum
+from django.db.models.functions import Coalesce
 from django.http import HttpResponseRedirect, request
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -101,6 +102,8 @@ class ListChunk(ListView):
 
         return context
 
+
+
 class ListChunk2(ListView):
     model = Chunk
     template_name = 'apostil/chunk_list_2.html'
@@ -160,6 +163,7 @@ class ListChunk2(ListView):
             qs = Chunk.objects.filter(date=d.get('date')).prefetch_related('apostils').select_related('apostils__chunk')
 
             # pd = {f"{d.get('date')}": qs, 'count_day': qs.aggregate(docs=Sum('apostils__count_docs'))}
+            # pd = {f"{d.get('date')}" : {'chunks': qs, 'count_docs': qs.aggregate(docs=Sum('apostils__count_docs'))}}
             pd = {f"{d.get('date')}" : {'chunks': qs, 'count_docs': qs.aggregate(docs=Sum('apostils__count_docs'))}}
             context['per_days'].update(pd)
 

@@ -9,12 +9,12 @@ urlpatterns = [
     path('edit_apostil/<int:pk>/', EditApostil.as_view(), name='apostil_edit'),
 
     # path('chunk_list/<str:date>/<str:time>/', ListChunk.as_view(), name='chunk_list'),
-    path('chunk_list/', ListChunk.as_view(), name='chunk_list'),
-    path('cl2/', ListChunk2.as_view(), name='chunk_list_2'),
+    path('chunk_list/', ListChunk.as_view(), name='chunk_list_2'),
+    path('cl2/', ListChunk2.as_view(), name='chunk_list'),
     path('all_chunk_list/', ListAllChunk.as_view(), name='chunk_list_all'), # НЕДОДЕЛКА
     path('chunk_generate/', gen_chunks, name='chunk_generate'),
 
     path('report/', report, name='report'),
 
-    path('', ListChunk.as_view(), name='index'),
+    path('', ListChunk2.as_view(), name='index'),
 ]
