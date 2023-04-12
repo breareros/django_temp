@@ -11,6 +11,7 @@ class ApostilList(models.Model):
     fio = models.CharField(max_length=300, null=False, verbose_name='ФИО заявителя')
     count_docs = models.PositiveIntegerField(default=1, verbose_name='Количество документов')
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время создания записи')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата и время обновления')
     phone = models.CharField(max_length=12, null=True, blank=True, verbose_name='Телефон')
     comments = models.TextField(null=True, blank=True, verbose_name='Примечания')
     is_done = models.BooleanField(default=False, verbose_name="Документы предоставлены")
