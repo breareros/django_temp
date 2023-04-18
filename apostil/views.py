@@ -8,10 +8,14 @@ from django.http import HttpResponseRedirect, request
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.viewsets import ModelViewSet
 
 from . import base
 from .forms import AddApostilForm, EditApostilForm, AddApostilWithDateForm, GenerateChunkForm
 from .models import ApostilList, Chunk
+from .serializers import ChunkSerializer, ChunkApostilSerializer
 from .services import generate_chunks
 
 
@@ -240,3 +244,17 @@ def report(request):
 #         print(chunks_to_create)
 #         Chunk.objects.bulk_create(chunks_to_create)
 
+class ChunkViewSet(ModelViewSet):
+    limit_days = base.limit_days
+    today = date.today()
+    end_show_date = today + timedelta(days=limit_days)
+    queryset = Chunk.objects.filter(date__range=(today, end_show_date),
+                                       apostils__isnull=True).prefetch_related(
+        'apostils').select_related('apostils__chunk')
+    # queryset = Chunk.objects.all()
+    # queryset = Chunk.objects.all().prefetch_related('apostils').select_related('apostils__chunk')
+    serializer_class = ChunkApostilSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['id', 'date', 'time']  # Не как в видео! Другая версия Django
+    search_fields = ['date', 'time']
+    ordering_fields = ['date', 'time']

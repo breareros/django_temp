@@ -1,6 +1,10 @@
 from django.urls import path
 from .views import index, AddApostil, EditApostil, AllApostil, ListChunk, AddApostilWithDate, gen_chunks, \
-    ListAllChunk, report, ListChunk2
+    ListAllChunk, report, ListChunk2, ChunkViewSet
+
+from rest_framework.routers import SimpleRouter
+router = SimpleRouter()
+router.register(r'chunk', ChunkViewSet, basename='chunk')
 
 urlpatterns = [
     path('apostil_list/', AllApostil.as_view(), name='apostil_list'),
@@ -18,3 +22,5 @@ urlpatterns = [
 
     path('', ListChunk2.as_view(), name='index'),
 ]
+
+urlpatterns += router.urls
