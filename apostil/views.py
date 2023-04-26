@@ -1,17 +1,18 @@
-import datetime
-# import sys
 from datetime import date, timedelta, datetime
 
-from django.db.models import Count, Sum
-from django.db.models.functions import Coalesce
-from django.http import HttpResponseRedirect, request
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.viewsets import ModelViewSet
 
 from . import base
 from .forms import AddApostilForm, EditApostilForm, AddApostilWithDateForm, GenerateChunkForm
 from .models import ApostilList, Chunk
+# from .serializers import ChunkSerializer
 from .services import generate_chunks
 
 
@@ -21,6 +22,7 @@ def index(request):
 
 
 class AllApostil(ListView):
+    ''' Список всех записей. всех-всех.'''
     model = ApostilList
     template_name = 'apostil/apostil_list.html'
     context_object_name = 'all_apostil'
@@ -30,6 +32,9 @@ class AllApostil(ListView):
         return apostils
 
 class AddApostil(CreateView):
+    '''
+    Добавление записи где все можно выбрать
+    '''
     model = ApostilList
     form_class = AddApostilForm
     template_name = 'apostil/apostil_add.html'
@@ -37,6 +42,9 @@ class AddApostil(CreateView):
 
 
 class AddApostilWithDate(AddApostil):
+    '''
+    Добавление записи на выбранный чанк. В самой форме выбрать чанк нельзя.
+    '''
     form_class = AddApostilWithDateForm
     template_name = 'apostil/apostil_add.html'
     def form_valid(self, form):
@@ -45,6 +53,7 @@ class AddApostilWithDate(AddApostil):
 
 
 class EditApostil(UpdateView):
+    ''' Редактирование записи'''
     model = ApostilList
     form_class = EditApostilForm
     template_name = 'apostil/apostil_update.html'
@@ -52,6 +61,7 @@ class EditApostil(UpdateView):
 
 
 class ListChunk(ListView):
+    """ Типа deprecated используй ListChunk2"""
     model = Chunk
     template_name = 'apostil/chunk_list.html'
     context_object_name = 'all_chunks'
@@ -75,7 +85,7 @@ class ListChunk(ListView):
         # ответ: Chunk.objects.filter(date__range=(self.today, self.end_show_date), apostils__isnull=True)
 
         print(f"{self.count_free_chunk_in_perid=}")
-        # if self.count_free_chunk_in_period <= 8:
+        # Если количество свободных чанков меньше чем количество интервалов в день (из расписания), то открываем для отображения еще день
         while self.count_free_chunk_in_perid <= len(base.time_intervals):
             self.limit_days += 1
             self.end_show_date = self.today + timedelta(days=self.limit_days)
@@ -120,11 +130,9 @@ class ListChunk2(ListView):
         self.count_free_chunk_in_period = self.chunks.count()
         self.days = self.chunks.order_by('date').values('date').distinct()
         print(f"{self.days=}")
-        # print(
-        #     f"-- init: s_day: {self.today} days: {self.limit_days} e_day: {self.end_show_date} count: {self.count_free_chunk_in_period}")
 
     def get_queryset(self):
-        # TODO: А если все limit_days заняты? ТО проблема да...
+        # TODO: А если все limit_days заняты? ТО ...
         # Как выбрать Chunks которые НЕ связаны с ApostilList...
         # ответ: Chunk.objects.filter(date__range=(self.today, self.end_show_date), apostils__isnull=True)
 
@@ -159,9 +167,7 @@ class ListChunk2(ListView):
         context['per_days'] = dict()
         for d in self.days:
             print(str(d.get('date')))
-
             qs = Chunk.objects.filter(date=d.get('date')).prefetch_related('apostils').select_related('apostils__chunk')
-
             # pd = {f"{d.get('date')}": qs, 'count_day': qs.aggregate(docs=Sum('apostils__count_docs'))}
             # pd = {f"{d.get('date')}" : {'chunks': qs, 'count_docs': qs.aggregate(docs=Sum('apostils__count_docs'))}}
             pd = {f"{d.get('date')}" : {'chunks': qs, 'count_docs': qs.aggregate(docs=Sum('apostils__count_docs'))}}
@@ -181,21 +187,12 @@ class ListAllChunk(ListView):
     success_url = reverse_lazy('chunk_list_all')
 
     def get_queryset(self):
-        # return Chunk.objects.filter(Q(pk__in=[b.get('chunk_id') for b in ApostilList.objects.all().values('chunk_id')]))
-        # return Chunk.objects.values('id', 'date', 'time', 'chunks__fio', 'chunks__is_done', 'chunks__is_gone',
-        #                             'chunks__id')  # filter(Q(pk__in=[b.get('chunk_id') for b in ApostilList.objects.all().values('chunk_id')]))
         return Chunk.objects.all().prefetch_related('apostils').select_related('apostils__chunk')
-        # return Chunk.objects.values('id', 'date', 'time', 'apostils__fio', 'apostils__is_done', 'apostils__is_gone','apostils__id')  # filter(Q(pk__in=[b.get('chunk_id') for b in ApostilList.objects.all().values('chunk_id')]))
 
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ListAllChunk, self).get_context_data(**kwargs)
         context['list_dates'] = Chunk.objects.order_by().values_list('date', flat=True).distinct()
-        # print(f"{context=}")
-        # print(f"{context['list_dates']=}")
-        # print()
-        # for c in context.items():
-        #     print(f"{c=}")
         return context
 
 
@@ -216,27 +213,22 @@ def gen_chunks(request):
 def report(request):
     return render(request, 'apostil/report.html')
 
-# Вынести эту функцию в services
-# def generate_chunks(start_date: date, end_date: date,
-#                     time_intervals: list = base.time_intervals) -> None:
-#     delta = end_date - start_date
-#     print(f"{delta}, {type(delta)}: {type(start_date)} {type(end_date)}")
-#     chunks_to_create = []
-#     for i in range((end_date - start_date).days + 1):
-#         current_date = start_date + timedelta(days=i)
-#         if current_date.isoweekday() not in (6, 7):  # 6 - суббота, 7 - воскресение
-#             chunks_to_create += [Chunk(date=current_date, time=datetime.strptime(t, '%H:%M').time()) for t in
-#                                  time_intervals]
-#
-#     # Получаем список уже существующих чанков в периоде start_date - end_date
-#     existing_chunks = Chunk.objects.filter(date__range=(start_date, end_date))
-#
-#     # Отфильтровываем из списка чанков те, которые уже были созданы ранее
-#     chunks_to_create = [chunk for chunk in chunks_to_create if
-#                         not existing_chunks.filter(date=chunk.date, time=chunk.time).exists()]
-#
-#     # Создаем новые чанки в базе данных
-#     if chunks_to_create:
-#         print(chunks_to_create)
-#         Chunk.objects.bulk_create(chunks_to_create)
+
+
+# class ChunkAPIList(ListAPIView):
+#     # queryset = Chunk.objects.filter(date__gte=date.today())
+#     queryset = Chunk.objects.filter(date=date.today()) #.prefetch_related('apostils').select_related('apostils__chunk')
+#     serializer_class = ChunkApostilSerializer
+
+# class ChunkViewSet(ModelViewSet):
+# # class ChunkViewSet(ListAPIView):
+#     queryset = Chunk.objects.filter(date__gte=date.today())
+#     serializer_class = ChunkSerializer
+#     permission_classes = [IsAuthenticatedOrReadOnly]
+#     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+#     filterset_fields = ['id', 'date', 'time']
+#     search_fields = ['date', 'time']
+#     ordering_fields = ['date', 'time']
+
+
 

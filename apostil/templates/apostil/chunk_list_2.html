@@ -1,12 +1,12 @@
 {% extends 'apostil/base.html' %}
 {% load static %}
 {% block head %}
-{#    <meta http-equiv="refresh" content="60">#}
+    <meta http-equiv="refresh" content="20">
 {% endblock %}
 
 {% block content %}
 
-    <div class="content">
+<div class="content">
     <div class="">
         <div id="searchbar">
             <input id="search" onkeyup="searchTable()" type="text" class="form-control mb-2" placeholder="поиск..."/>
@@ -129,52 +129,57 @@
             {% for day, info in per_days.items %}
                 <table id="ChanksTable" class="table caption-top table-striped table-bordered table-sm table-hover">
                 {#            <caption><h2>Слоты времени на {{ day.date|date:"d.m.Y" }}</h2></caption>#}
-                <caption><h2>Слоты времени на {{ day }}</h2></caption>
-                <thead>
-                <th>Дата</th>
-                <th>Время</th>
-                <th>Записан</th>
-                <th class="text-center">Телефон</th>
-                {#                <th class="text-center">Документы ({{ days_count.docs }} шт.)</th>#}
-                <th class="text-center">Документы
-                    {% if info.count_docs.docs %}
-                        ({{ info.count_docs.docs }} шт.)
-                    {% endif %}
-                </th>
-                </thead>
-
-                <tbody>
-                {% for chunk in info.chunks %}
-                    <tr>
-                        <td>{{ chunk.date|date:"d.m.Y" }}</td>
-                        <td>{{ chunk.time }}</td>
-                        {% if chunk.apostils %}
-                            <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}"
-                                   class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
-                        {% else %}
-                            <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a>
-                            </td>
-                        {% endif %}
-
-                        <td class="text-center">{% if chunk.apostils.phone %}{{ chunk.apostils.phone }} {% endif %}</td>
-
-                        {#ДОКУМЕНТЫ#}
-                        <td class="text-center">
-                            {% if chunk.apostils.is_done %}
-                                <span class="badge rounded-pill text-bg-success fs-6">{{ chunk.apostils.count_docs }} - <i
-                                        class="bi bi-check2-circle"></i></span>
-                            {% else %}
-                                {% if chunk.apostils.fio %}
-                                    <span class="badge rounded-pill text-bg-warning bi-lg fs-6"> {{ chunk.apostils.count_docs }} - <i
-                                            class="bi bi-x-lg"></i></span>
-                                {% endif %}
+                    <caption><h2>Слоты времени на {{ day }}</h2></caption>
+                    <thead>
+                        <th>Дата</th>
+                        <th>Время</th>
+                        <th>Записан</th>
+                        <th class="text-center">Телефон</th>
+                        {#                <th class="text-center">Документы ({{ days_count.docs }} шт.)</th>#}
+                        <th class="text-center">Документы
+                            {% if info.count_docs.docs %}
+                                ({{ info.count_docs.docs }} шт.)
                             {% endif %}
-                        </td>
+                        </th>
+                    </thead>
 
-                    </tr>
-                {% endfor %}
+                    <tbody>
+                    {% for chunk in info.chunks %}
+                        <tr>
+                            <td>{{ chunk.date|date:"d.m.Y" }}</td>
+                            <td>{{ chunk.time }}</td>
+                            {% if chunk.apostils %}
+                                <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}"
+                                       class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
+                            {% else %}
+                                <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a>
+                                </td>
+                            {% endif %}
+
+                            <td class="text-center">{% if chunk.apostils.phone %}{{ chunk.apostils.phone }} {% endif %}</td>
+
+                            {#ДОКУМЕНТЫ#}
+                            <td class="text-center">
+                                {% if chunk.apostils.is_done %}
+                                    <span class="badge rounded-pill text-bg-success fs-6">{{ chunk.apostils.count_docs }} - <i
+                                            class="bi bi-check2-circle"></i></span>
+                                {% else %}
+                                    {% if chunk.apostils.fio %}
+                                        <span class="badge rounded-pill text-bg-warning bi-lg fs-6"> {{ chunk.apostils.count_docs }} - <i
+                                                class="bi bi-x-lg"></i></span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             {% endfor %}
-        </div>
+
+    </div>
+    </div>
+</div>
+
 
         {#        <table id="ChanksTable" class="table caption-top table-striped table-bordered table-sm table-hover">#}
         {#            <caption><h2>Слоты времени</h2></caption>#}
@@ -202,8 +207,9 @@
         {#    </div>#}
         {#    <div>{{ all_chunks }}</div>#}
 
-    </div>
+<div><a href="{% url 'chunk_generate' %}" class="btn btn btn-outline-info mb-5">Добавить слоты времени</a></div>
 {% endblock %}
+
 {% block extra %}
     <script src="{% static 'apostil/js/search_table.js' %}"></script>
 {% endblock %}

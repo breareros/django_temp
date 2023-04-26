@@ -1,6 +1,10 @@
 from django.urls import path
+# from rest_framework.routers import SimpleRouter
+
 from .views import index, AddApostil, EditApostil, AllApostil, ListChunk, AddApostilWithDate, gen_chunks, \
     ListAllChunk, report, ListChunk2
+#    ChunkViewSet\
+    #, ChunkAPIList
 
 urlpatterns = [
     path('apostil_list/', AllApostil.as_view(), name='apostil_list'),
@@ -9,12 +13,19 @@ urlpatterns = [
     path('edit_apostil/<int:pk>/', EditApostil.as_view(), name='apostil_edit'),
 
     # path('chunk_list/<str:date>/<str:time>/', ListChunk.as_view(), name='chunk_list'),
-    path('chunk_list/', ListChunk.as_view(), name='chunk_list_2'),
-    path('cl2/', ListChunk2.as_view(), name='chunk_list'),
-    path('all_chunk_list/', ListAllChunk.as_view(), name='chunk_list_all'), # НЕДОДЕЛКА
+    path('chunk_list/', ListChunk.as_view(), name='chunk_list_2'), # тут робить живой поиск т.к. одна таблица
+    path('chunk_list_2/', ListChunk2.as_view(), name='chunk_list'),  # разбивка на таблицы с подсчетом документов на день, без поиска
+    path('all_chunk_list/', ListAllChunk.as_view(), name='chunk_list_all'), # НЕДОДЕЛКА список всех сгененрированных чанков
     path('chunk_generate/', gen_chunks, name='chunk_generate'),
 
-    path('report/', report, name='report'),
+    path('report/', report, name='report'), #  TODO: реализовать отчеты
 
     path('', ListChunk2.as_view(), name='index'),
+
+    # path('api/v1/cl/', ChunkAPIList.as_view()),
 ]
+
+# router = SimpleRouter()
+# router.register(r'api/chunk', ChunkViewSet, basename='chunk')
+#
+# urlpatterns += router.urls

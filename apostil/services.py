@@ -2,6 +2,7 @@ from datetime import date, datetime, timedelta
 
 from apostil import base
 from apostil.models import Chunk
+from apostil.base import holydays
 
 
 def generate_chunks(start_date: date, end_date: date,
@@ -11,7 +12,8 @@ def generate_chunks(start_date: date, end_date: date,
     chunks_to_create = []
     for i in range((end_date - start_date).days + 1):
         current_date = start_date + timedelta(days=i)
-        if current_date.isoweekday() not in (6, 7):  # 6 - суббота, 7 - воскресение
+        # if current_date.isoweekday() not in (6, 7):  # 6 - суббота, 7 - воскресение
+        if current_date.isoweekday() not in (6, 7) and current_date not in holydays():  # 6 - суббота, 7 - воскресение и праздники нахрен
             chunks_to_create += [Chunk(date=current_date, time=datetime.strptime(t, '%H:%M').time()) for t in
                                  time_intervals]
 

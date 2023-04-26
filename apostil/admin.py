@@ -11,6 +11,7 @@ class ChunkAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', 'time' )
     list_display_links = ('id', 'date', 'time')
     search_fields = ('id', 'date', 'time')
+    ordering = ['-date']
 
 admin.site.register(ApostilList, ApostilListAdmin)
 admin.site.register(Chunk, ChunkAdmin)

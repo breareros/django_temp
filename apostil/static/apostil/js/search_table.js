@@ -31,58 +31,39 @@ input.addEventListener('blur', function() {
     }
 });
 
-function searchTable() {
-    // Получаем строку поиска и таблицу
-    let input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("search");
+function searchAll() {
+    let filter, all_tables, table, tr, td, txtValue;
+    // input = document.getElementById("search");
     filter = input.value.toUpperCase();
-    table = document.getElementById("ChanksTable");
-    tr = table.getElementsByTagName("tr");
-
-    // Проходим по всем строкам таблицы и скрываем те, которые не соответствуют поиску
-    for (i = 0; i < tr.length; i++) {
+    all_tables = document.getElementsByClassName('table')
+    console.log(all_tables.length)
+    for (let a = 0; a < all_tables.length; a++) {
+        // console.log(it[i])
+        console.log("iter", a)
+        table = all_tables[a]
+        console.log(table)
+        tr = table.getElementsByTagName("tr");
+        // tr = table.getElementsByClassName("tohide");
+        console.log(tr)
+           for (i = 0; i < tr.length; i++) {
         // Проверяем по каждой ячейке в строке
-        for (j = 0; j < tr[i].cells.length; j++) {
-            td = tr[i].cells[j];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                    break; // Если есть хотя бы одно совпадение, то показываем строку
-                } else {
-                    tr[i].style.display = "none"; // Иначе скрываем
-                }
-            }
-        }
-    }
-}
-
-function searchTodayTable() {
-    // Получаем строку поиска и таблицу
-    let input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("search");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("TodayChanksTable");
-    tr = table.getElementsByTagName("tr");
-
-    // Проходим по всем строкам таблицы и скрываем те, которые не соответствуют поиску
-    for (i = 0; i < tr.length; i++) {
-        // Проверяем по каждой ячейке в строке
-        for (j = 0; j < tr[i].cells.length; j++) {
-            td = tr[i].cells[j];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                    break; // Если есть хотя бы одно совпадение, то показываем строку
-                } else {
-                    tr[i].style.display = "none"; // Иначе скрываем
-                }
-            }
-        }
-    }
+            for (j = 0; j < tr[i].cells.length; j++) {
+                td = tr[i].cells[j];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        table.caption.style.display = "";
+                        break; // Если есть хотя бы одно совпадение, то показываем строку
+                    } else {
+                        tr[i].style.display = "none"; // Иначе скрываем
+                        table.caption.style.display = "none"
+                    }
+                };
+            };
+        };
+    };
 }
 
 // Добавляем обработчик события на изменение значения input
-input.addEventListener('input', searchTable);
-input.addEventListener('input', searchTodayTable);
+input.addEventListener('input', searchAll);
