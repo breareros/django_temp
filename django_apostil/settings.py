@@ -88,21 +88,21 @@ WSGI_APPLICATION = 'django_apostil.wsgi.application'
 
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': db_config.get('NAME'),
-        'USER': db_config.get('USER'),
-        'PASSWORD': db_config.get('PASSWORD'),
-        'HOST': db_config.get('HOST'),
-        'PORT': db_config.get('PORT'),
-        'OPTIONS': {
-            'sql_mode': 'STRICT_TRANS_TABLES'
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': db_config.get('NAME'),
+    #     'USER': db_config.get('USER'),
+    #     'PASSWORD': db_config.get('PASSWORD'),
+    #     'HOST': db_config.get('HOST'),
+    #     'PORT': db_config.get('PORT'),
+    #     'OPTIONS': {
+    #         'sql_mode': 'STRICT_TRANS_TABLES'
+    #     },
+    # }
 }
 
 
