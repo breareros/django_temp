@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  web:
+    build: .
+      #command: gunicorn conf.wsgi:application --bind 0.0.0.0:8000
+    container_name: dj_apostil
+    command: >
+      sh -c "python manage.py makemigrations --noinput &&
+      python manage.py migrate &&
+      gunicorn django_apostil.wsgi:application --bind 0.0.0.0:8000"
+      #command: gunicorn django_apostil.wsgi:application --bind 0.0.0.0:8000
+#python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "5223:8000"
+    volumes:
+      - ./:/code
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=your-secret-key
+      - DJANGO_SETTINGS_MODULE=django_apostil.settings
+      - PYTHONUNBUFFERED=1
