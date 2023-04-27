@@ -19,13 +19,10 @@ class ApostilList(models.Model):
     executor_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Исполнитель') # , choices=base.executors)
     chunk = models.OneToOneField('Chunk', on_delete=models.CASCADE, related_name='apostils', blank=True, null=True,
                                  verbose_name='Слот времени')
-
     def __str__(self):
         return self.fio
-
     def get_absolute_url(self):
         return reverse(None, kwargs={'pk': self.pk})
-
     class Meta:
         verbose_name = 'Запись'
         verbose_name_plural = 'Записи'
@@ -34,8 +31,6 @@ class ApostilList(models.Model):
 
 class Chunk(models.Model):
     time_intervals = [(datetime.strptime(time, '%H:%M').time(), time) for time in base.time_intervals]
-                      # ['9:00', '9:15', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30']]
-
     date = models.DateField(auto_created=False, null=False,
                             verbose_name='Дата приема')
     time = models.TimeField(verbose_name="Время приема", null=True, choices=time_intervals)
