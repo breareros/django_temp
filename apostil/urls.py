@@ -1,7 +1,7 @@
 from django.urls import path
 # from rest_framework.routers import SimpleRouter
 
-from .views import index, AddApostil, EditApostil, AllApostil, ListChunk, AddApostilWithDate, gen_chunks, \
+from .views import AddApostil, EditApostil, AllApostil, ListChunk, AddApostilWithDate, gen_chunks, \
     ListAllChunk, report, ListChunk2
 #    ChunkViewSet\
     #, ChunkAPIList
