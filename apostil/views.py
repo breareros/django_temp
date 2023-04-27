@@ -177,7 +177,7 @@ class ListAllChunk(ListView):
     success_url = reverse_lazy('chunk_list_all')
 
     def get_queryset(self):
-        return Chunk.objects.all().prefetch_related('apostils').select_related('apostils__chunk')
+        return Chunk.objects.all().prefetch_related('apostils').select_related('apostils__chunk').order_by('-date')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ListAllChunk, self).get_context_data(**kwargs)
