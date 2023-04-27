@@ -58,7 +58,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django_apostil.middleware.filter_ip_middleware.FilterIPMiddleware',
 ]
 
 ROOT_URLCONF = 'django_apostil.urls'

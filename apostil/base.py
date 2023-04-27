@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-
+white_ip_range = [f"10.24.12.{x}" for x in range(254)]
 
 time_intervals = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30']
 limit_days = 14
