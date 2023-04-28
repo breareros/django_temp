@@ -42,9 +42,13 @@
                 <li class="nav-item ms-5">
                     <a class="nav-link text-blue" href="{% url 'apostil_add_clean' %}">Добавить запись</a>
                 </li>
+
         </div>
+        <div class="text-blue">Расписание до: {{ last_chunk.date|date:"d.m.Y" }}</div>
     </div>
+
 </nav>
+
 <hr>
 <div class="mt-2">
     <h1 class="text-center mb-3">Журнал предварительной записи на апостиль</h1>

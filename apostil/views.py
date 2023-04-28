@@ -159,6 +159,7 @@ class ListChunk2(ListView):
         context['to_day'] = self.today
         context['days'] = self.days
         context['per_days'] = dict()
+        context['last_chunk'] = self.days.last()
         for d in self.days:
             print(str(d.get('date')))
             qs = Chunk.objects.filter(date=d.get('date')).prefetch_related('apostils').select_related('apostils__chunk')
