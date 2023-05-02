@@ -124,7 +124,7 @@ class ListChunk2(ListView):
         self.limit_days = base.limit_days
         self.today = date.today()
         self.end_show_date = self.today + timedelta(days=self.limit_days)
-        self.chunks = Chunk.objects.filter(date__range=(self.today, self.end_show_date),
+        self.chunks = Chunk.objects.filter(date__range=(self.today + timedelta(days=1), self.end_show_date),
                                            apostils__isnull=True).prefetch_related(
             'apostils').select_related('apostils__chunk')
         self.count_free_chunk_in_period = self.chunks.count()
@@ -189,6 +189,15 @@ class ListAllChunk(ListView):
         context['list_dates'] = Chunk.objects.order_by().values_list('date', flat=True).distinct()
         return context
 
+class ListChunkOhrana(ListView):
+    model = Chunk
+    template_name = 'apostil/ohrana.html'
+    context_object_name = 'today'
+    def get_queryset(self):
+        today = date.today()
+        qs = Chunk.objects.filter(date=today).prefetch_related('apostils').select_related('apostils__chunk')
+        return qs
+
 
 def gen_chunks(request):
     '''Проверка корректности что дата начала раньше, чем дата конца в форме'''
@@ -203,15 +212,15 @@ def gen_chunks(request):
 
     return render(request, 'apostil/chunk_generate.html', {'form': form})
 
+def report(request):
+    if request.method == 'POST':
+        form = GenerateChunkForm(request.POST)
+        if form.is_valid():
+            return redirect('report')
+    else:
+        form = GenerateChunkForm()
 
-class ListChunkOhrana(ListView):
-    model = Chunk
-    template_name = 'apostil/ohrana.html'
-    context_object_name = 'today'
-    def get_queryset(self):
-        today = date.today()
-        qs = Chunk.objects.filter(date=today).prefetch_related('apostils').select_related('apostils__chunk')
-        return qs
+    return render(request, 'apostil/report_dev.html', {'form': form})
 
 # def getpdf(request):
 #     response = HttpResponse(content_type='application/pdf')
@@ -228,8 +237,7 @@ class ListChunkOhrana(ListView):
 #     response['Content-Disposition'] = f'attachment; filename="today.xlsx"'
 #     pass
 
-def report(request):
-    return render(request, 'apostil/report.html')
+
 
 class Stat(ListView):
     ''' Список всех записей. всех-всех.'''
