@@ -1,7 +1,7 @@
 from datetime import date, timedelta, datetime
 from dateutil.relativedelta import relativedelta, MO, FR
 
-from reportlab.pdfgen import canvas
+# from reportlab.pdfgen import canvas
 
 from django.db.models import Sum
 from django.shortcuts import render, redirect
