@@ -4,6 +4,6 @@
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Сгенерировать</button>
-    <a href="{% url 'chunk_list' %}" class="btn btn-danger">Отмена</a>
+    <a href="{% url 'index' %}" class="btn btn-danger">Отмена</a>
 </form>
 {%  endblock %}
