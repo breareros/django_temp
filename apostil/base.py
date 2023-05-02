@@ -4,6 +4,7 @@ white_ip_range = [f"10.24.12.{x}" for x in range(254)]
 
 time_intervals = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30']
 limit_days = 14
+warning_limit_days = 5
 
 executors = (
     (None, ''),
@@ -26,3 +27,4 @@ def holydays() -> dict[date]:
     '2023-11-06'
 ]
     return [datetime.strptime(str(d), "%Y-%m-%d").date() for d in holydays]
+

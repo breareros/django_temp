@@ -47,7 +47,13 @@
                 </li>
 
         </div>
-        <div class="text-blue">Расписание до: <strong>{{ last_chunk.date|date:"d.m.Y" }}</strong> </div>
+        <div class="text-blue">Расписание до:
+            {% if delta_days.days < warning_days %}
+                <strong style="color: red; font-size: 30px;">{{ last_chunk.date|date:"d.m.Y" }}</strong>
+            {% else %}
+                <strong>{{ last_chunk.date|date:"d.m.Y" }}</strong>
+            {% endif %}
+        </div>
     </div>
 
 </nav>
