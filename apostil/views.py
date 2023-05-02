@@ -129,19 +129,19 @@ class ListChunk2(ListView):
             'apostils').select_related('apostils__chunk')
         self.count_free_chunk_in_period = self.chunks.count()
         self.days = self.chunks.order_by('date').values('date').distinct()
-        print(f"{self.days=}")
+        # print(f"{self.days=}")
 
     def get_queryset(self):
         # TODO: А если все limit_days заняты? ТО ...
         # Как выбрать Chunks которые НЕ связаны с ApostilList...
         # ответ: Chunk.objects.filter(date__range=(self.today, self.end_show_date), apostils__isnull=True)
 
-        print(f"{self.count_free_chunk_in_period=}")
+        # print(f"{self.count_free_chunk_in_period=}")
         while self.count_free_chunk_in_period <= len(base.time_intervals):
             self.limit_days += 1
             self.end_show_date = self.today + timedelta(days=self.limit_days)
-            print(f"{self.end_show_date=} {self.limit_days=}")
-            print()
+            # print(f"{self.end_show_date=} {self.limit_days=}")
+            # print()
             self.count_free_chunk_in_period = Chunk.objects.filter(date__range=(self.today, self.end_show_date),
                                                                    apostils__isnull=True).prefetch_related(
                 'apostils').select_related('apostils__chunk').count()
@@ -163,14 +163,14 @@ class ListChunk2(ListView):
         context['to_day'] = self.today
         context['days'] = self.days
         context['per_days'] = dict()
-        context['last_chunk'] = self.days.last()
+        context['last_chunk'] = Chunk.objects.order_by('date').values('date').distinct().last()
         for d in self.days:
-            print(str(d.get('date')))
+            # print(str(d.get('date')))
             qs = Chunk.objects.filter(date=d.get('date')).prefetch_related('apostils').select_related('apostils__chunk')
             pd = {f"{d.get('date')}": {'chunks': qs, 'count_docs': qs.aggregate(docs=Sum('apostils__count_docs'))}}
             context['per_days'].update(pd)
 
-        print(f"{context['per_days']=}")
+        # print(f"{context['per_days']=}")
         return context
 
 
@@ -216,6 +216,15 @@ def report(request):
     if request.method == 'POST':
         form = GenerateChunkForm(request.POST)
         if form.is_valid():
+            start_date = form.cleaned_data.get('start')
+            stop_date = form.cleaned_data.get('end')
+            print(f"{start_date=}")
+            print(f"{stop_date=}")
+            # ch = Chunk.objects.filter(date__range=(start_date, stop_date), apostils__isnull=False).prefetch_related('apostils').select_related('apostils__chunk')
+            ch = Chunk.objects.filter(date__range=(start_date, stop_date), apostils__isnull=False).select_related('apostils')
+            for c in ch:
+                print(f"{c=}")
+            print(f"{ch.values('date', 'time', 'apostils__fio', 'apostils__count_docs')}")
             return redirect('report')
     else:
         form = GenerateChunkForm()
