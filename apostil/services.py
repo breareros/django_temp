@@ -28,3 +28,6 @@ def generate_chunks(start_date: date, end_date: date,
     if chunks_to_create:
         print(chunks_to_create)
         Chunk.objects.bulk_create(chunks_to_create)
+
+def gen_list_for_ohrana():
+    pass

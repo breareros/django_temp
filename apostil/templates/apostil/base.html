@@ -36,6 +36,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'chunk_list_all' %}">Все слоты времени</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-blue" href="{% url 'ohrana' %}">На охрану</a>
+                </li>
                 <li class="nav-item ms-5">
                     <a class="nav-link text-blue" href="{% url 'report' %}">Отчет</a>
                 </li>
@@ -51,7 +54,7 @@
 
 <hr>
 <div class="mt-2">
-    <h1 class="text-center mb-3">Журнал предварительной записи на апостиль</h1>
+    <h3 class="text-center mb-3">Журнал предварительной записи на апостиль</h3>
     <hr>
     {#<a href="{% url 'apostil_list' %}">Журнал предварительной записи на апостиль</a>#}
     <div class="container">
