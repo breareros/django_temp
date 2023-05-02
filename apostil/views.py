@@ -1,9 +1,13 @@
 from datetime import date, timedelta, datetime
+from dateutil.relativedelta import relativedelta, MO, FR
+
+from reportlab.pdfgen import canvas
 
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView
+from django.http import HttpResponse
 
 from . import base
 from .forms import AddApostilForm, EditApostilForm, AddApostilWithDateForm, GenerateChunkForm
@@ -200,20 +204,50 @@ def gen_chunks(request):
     return render(request, 'apostil/chunk_generate.html', {'form': form})
 
 
+class ListChunkOhrana(ListView):
+    model = Chunk
+    template_name = 'apostil/ohrana.html'
+    context_object_name = 'today'
+    def get_queryset(self):
+        today = date.today()
+        qs = Chunk.objects.filter(date=today).prefetch_related('apostils').select_related('apostils__chunk')
+        return qs
+
+# def getpdf(request):
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = f'attachment; filename="file.pdf"'
+#     p = canvas.Canvas(response)
+#     p.setFont("Courier", 20)
+#     p.drawString(100,700, "Hi, security. Привет!")
+#     p.showPage()
+#     p.save()
+#     return response
+#
+# def get_xlsx(request):
+#     response = HttpResponse(content_type='application/xlsx')
+#     response['Content-Disposition'] = f'attachment; filename="today.xlsx"'
+#     pass
+
 def report(request):
     return render(request, 'apostil/report.html')
 
-# class ChunkAPIList(ListAPIView):
-#     # queryset = Chunk.objects.filter(date__gte=date.today())
-#     queryset = Chunk.objects.filter(date=date.today()) #.prefetch_related('apostils').select_related('apostils__chunk')
-#     serializer_class = ChunkApostilSerializer
+class Stat(ListView):
+    ''' Список всех записей. всех-всех.'''
+    model = Chunk
+    template_name = 'apostil/stat.html'
+    context_object_name = 'all_apostil'
 
-# class ChunkViewSet(ModelViewSet):
-# # class ChunkViewSet(ListAPIView):
-#     queryset = Chunk.objects.filter(date__gte=date.today())
-#     serializer_class = ChunkSerializer
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-#     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-#     filterset_fields = ['id', 'date', 'time']
-#     search_fields = ['date', 'time']
-#     ordering_fields = ['date', 'time']
+    def __init__(self):
+        super(ListChunk2, self).__init__()
+        self.today = datetime.today()
+        self.pre_monday = self.today + relativedelta(weekday=MO(-2))
+        self.pre_friday = self.today + relativedelta(weekday=FR(-1))
+
+    def get_queryset(self):
+        apostils = Chunk.objects.filter(date__range=(self.pre_monday, self.today)).aggregate(docs=Sum('apostils__count_docs'))
+        return apostils
+
+    def get_context_data(self, **kwargs):
+        context = super(Stat, self).get_context_data(**kwargs)
+        context['pre_week_count'] = Chunk.filter(date).sele
+

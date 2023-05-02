@@ -2,7 +2,8 @@ from django.urls import path
 # from rest_framework.routers import SimpleRouter
 
 from .views import AddApostil, EditApostil, AllApostil, ListChunk, AddApostilWithDate, gen_chunks, \
-    ListAllChunk, report, ListChunk2
+    ListAllChunk, report, ListChunk2, ListChunkOhrana
+
 #    ChunkViewSet\
     #, ChunkAPIList
 
@@ -19,6 +20,9 @@ urlpatterns = [
     path('chunk_generate/', gen_chunks, name='chunk_generate'),
 
     path('report/', report, name='report'), #  TODO: реализовать отчеты
+    # path('stat/', stat, name='stat'),
+    path('ohrana/', ListChunkOhrana.as_view(), name='ohrana'),
+    # path('pdf', getpdf, name='pdf'),
 
     path('', ListChunk2.as_view(), name='index'),
 
