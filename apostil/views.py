@@ -166,6 +166,8 @@ class ListChunk2(ListView):
         context['last_chunk'] = Chunk.objects.order_by('date').values('date').distinct().last()
         context['delta_days'] = context['last_chunk']['date'] - self.end_show_date  # разница между отображаемой последеней датой и послденим днем в расписании
         context['warning_days'] = base.warning_limit_days
+        context['count_all_docs'] = Chunk.objects.filter(date__gte=self.today, apostils__isnull=False).select_related('apostils').aggregate(docs=Sum('apostils__count_docs'))
+        print(f"{context['count_all_docs']=}")
         if  context['delta_days'].days < base.warning_limit_days:
             print(f"Расписание кончается, надо сгенерировать")
         for d in self.days:
