@@ -47,12 +47,12 @@
                 </li>
 
         </div>
-        <div class="me-2 text-info">Всего док-ов: <strong style="color: cadetblue; border: 1px solid cadetblue; border-radius: 5px;">{{ count_all_docs.docs }}</strong></div>
+        <div class="me-2 text-info">Всего док-ов: <strong class="px-1" style="color: cadetblue; border: 1px solid cadetblue; border-radius: 5px;">{{ count_all_docs.docs }}</strong></div>
         <div class="text-info">Расписание до:
             {% if delta_days.days < warning_days %}
-                <strong style="color: red; font-size: 30px;">{{ last_chunk.date|date:"d.m.Y" }}</strong>
+                <strong class="px-2" style="color: red; font-size: 30px;">{{ last_chunk.date|date:"d.m.Y" }}</strong>
             {% else %}
-                <strong style="color: cadetblue; border: 1px solid cadetblue; border-radius: 5px;">{{ last_chunk.date|date:"d.m.Y" }}</strong>
+                <strong class="px-1" style="color: cadetblue; border: 1px solid cadetblue; border-radius: 5px;">{{ last_chunk.date|date:"d.m.Y" }}</strong>
             {% endif %}
         </div>
     </div>
