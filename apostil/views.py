@@ -1,13 +1,10 @@
 from datetime import date, timedelta, datetime
 from dateutil.relativedelta import relativedelta, MO, FR
 
-# from reportlab.pdfgen import canvas
-
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView
-from django.http import HttpResponse
 
 from . import base
 from .forms import AddApostilForm, EditApostilForm, AddApostilWithDateForm, GenerateChunkForm
@@ -129,19 +126,15 @@ class ListChunk2(ListView):
             'apostils').select_related('apostils__chunk')
         self.count_free_chunk_in_period = self.chunks.count()
         self.days = self.chunks.order_by('date').values('date').distinct()
-        # print(f"{self.days=}")
 
     def get_queryset(self):
         # TODO: А если все limit_days заняты? ТО ...
         # Как выбрать Chunks которые НЕ связаны с ApostilList...
         # ответ: Chunk.objects.filter(date__range=(self.today, self.end_show_date), apostils__isnull=True)
 
-        # print(f"{self.count_free_chunk_in_period=}")
         while self.count_free_chunk_in_period <= len(base.time_intervals):
             self.limit_days += 1
             self.end_show_date = self.today + timedelta(days=self.limit_days)
-            # print(f"{self.end_show_date=} {self.limit_days=}")
-            # print()
             self.count_free_chunk_in_period = Chunk.objects.filter(date__range=(self.today, self.end_show_date),
                                                                    apostils__isnull=True).prefetch_related(
                 'apostils').select_related('apostils__chunk').count()
@@ -168,15 +161,13 @@ class ListChunk2(ListView):
         context['warning_days'] = base.warning_limit_days
         context['count_all_docs'] = Chunk.objects.filter(date__gte=self.today, apostils__isnull=False).select_related('apostils').aggregate(docs=Sum('apostils__count_docs'))
         print(f"{context['count_all_docs']=}")
-        if  context['delta_days'].days < base.warning_limit_days:
-            print(f"Расписание кончается, надо сгенерировать")
+        # if  context['delta_days'].days < base.warning_limit_days:
+        #     print(f"Расписание кончается, надо сгенерировать")
         for d in self.days:
-            # print(str(d.get('date')))
             qs = Chunk.objects.filter(date=d.get('date')).prefetch_related('apostils').select_related('apostils__chunk')
             pd = {f"{d.get('date')}": {'chunks': qs, 'count_docs': qs.aggregate(docs=Sum('apostils__count_docs'))}}
             context['per_days'].update(pd)
 
-        # print(f"{context['per_days']=}")
         return context
 
 
@@ -226,7 +217,6 @@ def report(request):
             stop_date = form.cleaned_data.get('end')
             print(f"{start_date=}")
             print(f"{stop_date=}")
-            # ch = Chunk.objects.filter(date__range=(start_date, stop_date), apostils__isnull=False).prefetch_related('apostils').select_related('apostils__chunk')
             ch = Chunk.objects.filter(date__range=(start_date, stop_date), apostils__isnull=False).select_related('apostils')
             for c in ch:
                 print(f"{c=}")
@@ -237,22 +227,11 @@ def report(request):
 
     return render(request, 'apostil/report_dev.html', {'form': form})
 
-# def getpdf(request):
-#     response = HttpResponse(content_type='application/pdf')
-#     response['Content-Disposition'] = f'attachment; filename="file.pdf"'
-#     p = canvas.Canvas(response)
-#     p.setFont("Courier", 20)
-#     p.drawString(100,700, "Hi, security. Привет!")
-#     p.showPage()
-#     p.save()
-#     return response
-#
+
 # def get_xlsx(request):
 #     response = HttpResponse(content_type='application/xlsx')
 #     response['Content-Disposition'] = f'attachment; filename="today.xlsx"'
 #     pass
-
-
 
 class Stat(ListView):
     ''' Список всех записей. всех-всех.'''
