@@ -85,8 +85,14 @@
                         <td>{{ chunk.time }}</td>
 
                         {% if chunk.apostils %}
-                            <td><a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}"
-                                   class="btn btn-warning">{{ chunk.apostils.fio }}</a></td>
+                            <td>
+                                   {% if chunk.apostils.is_gone %}
+                                       <a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}" class="btn btn-secondary text-decoration-line-through">{{ chunk.apostils.fio }}</a>
+                                   {% else %}
+                                        <a href="{% url 'apostil_edit' pk=chunk.apostils.pk %}" class="btn btn-warning">{{ chunk.apostils.fio }}</a>
+                                   {% endif %}
+                            </td>
+
                         {% else %}
                             <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a>
                             </td>
