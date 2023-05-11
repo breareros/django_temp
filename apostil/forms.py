@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from django import forms
 from django.db.models import Q
+from django.forms import DateInput
 
 from . import base
 from .models import ApostilList, Chunk
@@ -66,6 +67,8 @@ class EditApostilForm(forms.ModelForm):
             label='Слот времени',
             empty_label='Дата не выбрана',
             widget=forms.Select(attrs={'class': 'form-select'}))
+        # self.fields['finish_at'].widget = DateInput()
+        # self.fields['finish_at'].input_formats = ["%Y-%m-%d"]
         self.fields['chunk'].empty_label = "Дата не выбрана"
         self.fields['executor_name'].empty_label = "Исполнитель не выбран"
 
@@ -76,9 +79,11 @@ class EditApostilForm(forms.ModelForm):
             'fio': forms.TextInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'count_docs': forms.NumberInput(attrs={'class': 'form-control'}),
-            'comments': forms.Textarea(attrs={'class': 'form-control'}),
+            'comments': forms.Textarea(attrs={'class': 'form-control', 'rows': '4'}),
             'is_gone': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'is_done': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_finish': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'finish_at': forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date'}),
             'executor_name': forms.Select(choices=base.executors, attrs={'class': 'form-select'}),
         }
 

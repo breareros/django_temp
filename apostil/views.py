@@ -150,7 +150,8 @@ class ListChunk2(ListView):
             'apostils__chunk')
         context['lost'] = Chunk.objects.filter(date__lt=self.today,
                                                apostils__is_done=False,
-                                               apostils__is_gone=False
+                                               apostils__is_gone=False,
+                                               apostils__is_finish=False
                                                ).prefetch_related('apostils').select_related('apostils__chunk')
         context['days_count'] = Chunk.objects.filter(date=self.today).aggregate(docs=Sum('apostils__count_docs'))
         context['to_day'] = self.today
@@ -186,10 +187,12 @@ class ListAllChunk(ListView):
         context['list_dates'] = Chunk.objects.order_by().values_list('date', flat=True).distinct()
         return context
 
+
 class ListChunkOhrana(ListView):
     model = Chunk
     template_name = 'apostil/ohrana.html'
     context_object_name = 'today'
+
     def get_queryset(self):
         today = date.today()
         qs = Chunk.objects.filter(date=today).prefetch_related('apostils').select_related('apostils__chunk')
@@ -208,6 +211,7 @@ def gen_chunks(request):
         form = GenerateChunkForm()
 
     return render(request, 'apostil/chunk_generate.html', {'form': form})
+
 
 def report(request):
     if request.method == 'POST':

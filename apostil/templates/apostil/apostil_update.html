@@ -1,9 +1,66 @@
 {% extends 'apostil/base.html' %}
 {% block content %}
-<form action="" method="post" class="form-row">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-    <a href="{% url 'index' %}" class="btn btn-danger">Отмена</a>
-</form>
+{#<form action="" method="post" class="form-row">#}
+{#    {% csrf_token %}#}
+{#    {{ form.as_p }}#}
+{#    <button type="submit" class="btn btn-primary">Сохранить</button>#}
+{#    <a href="{% url 'index' %}" class="btn btn-danger">Отмена</a>#}
+{#</form>#}
+{#<hr>#}
+    <form action="" method="post" class="form-row">
+        {% csrf_token %}
+        <div class="mb-2">
+            {{ form.fio.label }}
+            {{ form.fio }}
+        </div>
+
+        <div class="mb-2">
+            {{ form.count_docs.label }}
+            {{ form.count_docs }}
+        </div>
+
+        <div class="mb-2">
+            {{ form.phone.label }}
+            {{ form.phone }}
+        </div>
+
+        <div class="mb-2">
+            {{ form.comments.label }}
+            {{ form.comments }}
+        </div>
+
+        <div class="mb-2">
+            {{ form.chunk.label }}
+            {{ form.chunk }}
+        </div>
+
+        <div class="mb-2">
+            {{ form.is_done.label }}
+            {{ form.is_done }}
+        </div>
+
+        <div class="mb-2">
+            {{ form.is_gone.label }}
+            {{ form.is_gone }}
+        </div>
+        <hr>
+        <div class="mb-2">
+            <strong>{{ form.is_finish.label }}</strong>
+            {{ form.is_finish }}
+        </div>
+
+        <div class="mb-2">
+            {{ form.finish_at.label }}:
+            {{ form.finish_at }}
+        </div>
+
+        <div class="mb-2">
+            {{ form.executor_name.label }}
+            {{ form.executor_name }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{% url 'index' %}" class="btn btn-danger">Отмена</a>
+    </form>
+
 {% endblock %}
