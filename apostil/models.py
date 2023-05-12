@@ -33,8 +33,7 @@ class ApostilList(models.Model):
 
 class Chunk(models.Model):
     time_intervals = [(datetime.strptime(time, '%H:%M').time(), time) for time in base.time_intervals]
-    date = models.DateField(auto_created=False, null=False,
-                            verbose_name='Дата приема')
+    date = models.DateField(auto_created=False, null=False, verbose_name='Дата приема')
     time = models.TimeField(verbose_name="Время приема", null=True, choices=time_intervals)
 
     def __str__(self):
@@ -45,3 +44,4 @@ class Chunk(models.Model):
         verbose_name_plural = 'Даты время приема'
         ordering = ['date', 'time']
         unique_together = ['date', 'time']
+

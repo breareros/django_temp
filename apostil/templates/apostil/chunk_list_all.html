@@ -12,6 +12,7 @@
                 <th>Записан</th>
                 <th>Документы</th>
                 <th>Не явился</th>
+{#                <th>Выданы</th>#}
         </thead>
 
         <tbody>
@@ -27,6 +28,7 @@
                             </td>
                             <td>{{ chunk.apostils.is_done }}</td>
                             <td>{{ chunk.apostils.is_gone }}</td>
+{#                            <td>{{ chunk.apostils.is_finish }}</td>#}
                     </tr>
                     {% if date ==  chunk.date %}
                         <tr>

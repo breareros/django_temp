@@ -1,5 +1,6 @@
 {% extends 'apostil/base.html' %}
 {% block content %}
+{% load filters %}
 
 <div class="content">
 
@@ -15,6 +16,9 @@
                 <th>Примечание</th>
                 <th>Документы</th>
                 <th>Не явился</th>
+                <th>Выданы</th>
+                <th>Исполнитель</th>
+                <th>Исполнено</th>
         </thead>
         <tbody>
         {% for apostil in all_apostil %}
@@ -22,13 +26,53 @@
     {#            <td>{{ apostil.pk }}</td>#}
                 <td>{{ apostil.chunk.date|date:"d.m.Y" }}</td>
                 <td>{{ apostil.chunk.time }}</td>
-                <td>{{ apostil.fio }}</td>
-{#                <td><a href="{% url 'view_apostil' pk=apostil.id %}">{{ apostil.fio }}</a></td>#}
+{#                <td>{{ apostil.fio }}</td>#}
+                <td><a href="{% url 'apostil_edit' pk=apostil.id %}" target="_blank">{{ apostil.fio }}</a></td>
                 <td>{{ apostil.count_docs }}</td>
-                <td>{{ apostil.phone }}</td>
+{#              телефон#}
+                <td class="text-center">
+                    {% if apostil.phone %}{{ apostil.phone }} {% endif %}
+                </td>
                 <td>{{ apostil.comments }}</td>
-                <td>{{ apostil.is_done }}</td>
-                <td>{{ apostil.is_gone }}</td>
+{#              документы предоставлены#}
+                <td class="text-center">
+                    {% if apostil.is_done %}
+                        <span class="badge rounded-pill text-bg-success"><i class="bi bi-check2-circle"></i></span>
+                    {% else %}
+                        <span class="badge rounded-pill text-bg-danger bi-lg">
+                            <i class="bi bi-sign-stop bi-lg"></i>
+                        </span>
+                    {% endif %}
+                </td>
+{#              не явились#}
+                <td class="text-center">
+                    {% if apostil.is_gone %}
+                        <span class="badge rounded-pill text-bg-success">
+                            <i class="bi bi-check2-circle bi-lg"></i>
+                        </span>
+                    {% endif %}
+                </td>
+{#                <td>{{ apostil.is_finish }}</td>#}
+{#              выданы#}
+                <td class="text-center">
+                    {% if apostil.is_finish %}
+                        <span class="badge rounded-pill text-bg-success">
+                            <i class="bi bi-check2-circle bi-lg"></i>
+                        </span>
+                    {% endif %}
+                </td>
+{#                исполнитель#}
+                <td class="text-center">
+                    {% if apostil.executor_name %}
+                        {{ executor|get_item:apostil.executor_name }}
+                    {% endif %}
+                </td>
+{#                исполнено#}
+                <td class="text-center">
+                    {% if apostil.executor_name %}
+                        {{ apostil.finish_at|date:"Y.m.d" }}
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
