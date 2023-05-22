@@ -14,14 +14,6 @@
                 <th>Время</th>
                 <th>Записан</th>
 
-{#                <th class="text-center">Телефон</th>#}
-{#                <th class="text-center">Документы#}
-{#                    {% if days_count.docs %}#}
-{#                        ({{ days_count.docs }} шт.)#}
-{#                    {% endif %}#}
-{#                </th>#}
-{#                <th class="text-center">Не явились</th>#}
-{#             #}
                 </thead>
                 <tbody>
                 {% for chunk in today %}
@@ -36,30 +28,6 @@
                             <td><a href="{% url 'apostil_add' id_chunk=chunk.id %}" class="btn btn-outline-primary">Добавить</a>
                             </td>
                         {% endif %}
-
-                        {# ТЕЛЕФОН #}
-{#                        <td class="text-center">{% if chunk.apostils.phone %}{{ chunk.apostils.phone }} {% endif %}</td>#}
-{##}
-                        {#ДОКУМЕНТЫ#}
-{#                        <td class="text-center">#}
-{#                            {% if chunk.apostils.is_done %}#}
-{#                                <span class="badge rounded-pill text-bg-success fs-6">{{ chunk.apostils.count_docs }} - <i#}
-{#                                        class="bi bi-check2-circle"></i></span>#}
-{#                            {% else %}#}
-{#                                {% if chunk.apostils.fio %}#}
-{#                                    <span class="badge rounded-pill text-bg-warning bi-lg fs-6"> {{ chunk.apostils.count_docs }} - <i#}
-{#                                            class="bi bi-x-lg"></i></span>#}
-{#                                {% endif %}#}
-{#                            {% endif %}#}
-{#                        </td>#}
-{##}
-                        {#НЕ ЯВИЛИСЬ#}
-{#                        <td class="text-center">#}
-{#                            {% if chunk.apostils.is_gone %}#}
-{#                                <span class="badge rounded-pill text-bg-danger fs-5"><i#}
-{#                                        class="bi bi-check2-circle bi-lg"></i></span>#}
-{#                            {% endif %}#}
-{#                        </td>#}
 
                     </tr>
                 {% endfor %}
