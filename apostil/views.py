@@ -199,7 +199,8 @@ class ListChunkOhrana(ListView):
 
     def get_queryset(self):
         today = date.today()
-        qs = Chunk.objects.filter(date=today).prefetch_related('apostils').select_related('apostils__chunk')
+        # qs = Chunk.objects.filter(date=today).prefetch_related('apostils').select_related('apostils__chunk')
+        qs = Chunk.objects.filter(date__range=(today, today + timedelta(days=2)), apostils__isnull=False).prefetch_related('apostils').select_related('apostils__chunk')
         return qs
 
 
